@@ -76,7 +76,7 @@
 
 <table>
   <tr>
-    <td><pre><code>expr_1
+    <td style="vertical-align: top;"><pre><code>expr_1
 (define var_1 (x))
 expr_2
 expr_3
@@ -84,18 +84,10 @@ expr_3
 (define var_3 (z))
 expr_4
 expr_5</code></pre>
-    <td>&xrArr;
-    <td><pre><code>(letrec*
-    ((var_1
-      (begin
-        expr_1
-        (x)))
-     (var_2
-      (begin
-        expr_2
-        expr_3
-        (y)))
-     (var_3 (z)))
+    <td style="padding: 0 2rem; font-size: 2em; text-align: center;">&xrArr;
+    <td style="vertical-align: top;"><pre><code>(letrec* ((var_1 (begin expr_1 (x)))
+          (var_2 (begin expr_2 expr_3 (y)))
+          (var_3 (z)))
   expr_4
   expr_5)</code></pre>
 </table>
