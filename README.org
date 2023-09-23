@@ -1,0 +1,20 @@
+
+* SRFI 245: Mixing definitions and expressions within bodies
+
+** by Daphne Preston-Kendal
+
+
+
+keywords: [[https://srfi.schemers.org/?keywords=binding][Binding]]
+
+This repository hosts [[https://srfi.schemers.org/srfi-245/][SRFI 245]]: Mixing definitions and expressions within bodies, a [[https://srfi.schemers.org/][Scheme Request for Implementation]].
+
+This SRFI is in /draft/ status.
+
+The full documentation for this SRFI can be found in the [[https://srfi.schemers.org/srfi-245/srfi-245.html][SRFI Document]].
+
+If you'd like to participate in the discussion of this SRFI, or report issues with it, please [[https://srfi.schemers.org/srfi-245/][join the SRFI-245 mailing list]] and send your message there.
+
+Thank you.
+
+[[mailto:srfi-editors@srfi.schemers.org][The SRFI Editors]]
