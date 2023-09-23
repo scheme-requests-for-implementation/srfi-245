@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>SRFI ###: Mixing definitions and expressions within bodies</title>
+    <link href="/favicon.png" rel="icon" sizes="192x192" type="image/png">
+    <link rel="stylesheet" href="https://srfi.schemers.org/srfi.css" type="text/css">
+    <meta name="viewport" content="width=device-width, initial-scale=1"></head>
+    <h1><a href="https://srfi.schemers.org/"><img class="srfi-logo" src="https://srfi.schemers.org/srfi-logo.svg" alt="SRFI surfboard logo" /></a>###: Mixing definitions and expressions within bodies</h1>
+
+<p>by Daphne Preston-Kendal</p>
+
+<h2 id="status">Status</h2>
+
+<p style="color: red;">For editor's use only.  Please do not edit this section.</p>
+
+<p>??? the draft/final/withdrawn status of the SRFI, information on how
+to subscribe to its mailing list, and important dates in its history.
+The editor will add this section.</p>
+
+<h2 id="abstract">Abstract</h2>
+
+<p>Scheme has traditionally required procedure bodies and the bodies of derived constructs such as <code>let</code> to contain definitions followed by expressions. This SRFI proposes to allow expressions to appear before and intermingled with definitions in such bodies, as was allowed in program bodies by the R6RS and in library bodies by R7RS small.
+
+<h2 id="issues">Issues</h2>
+
+<p>None known at present.
+
+<h2 id="rationale">Rationale</h2>
+
+<p>It often makes sense to run type and other basic error checks on input forms before any other code runs (including the right-hand sides of definitions):
+
+<pre><code>(define (double-square x) 
+  (unless (number? x)
+    (error "foo: not a number" x))
+  (define y (square x))
+  (* 2 y))</code></pre>
+
+<p>It is likewise sometimes useful to insert logging code before the beginning of a procedure before any other code:
+
+<pre><code>(define (dangerous-operation x)
+  (log-warn "Beginning dangerous operation on value" x)
+  (define prepared-x (prepare-for-dangerous-operation x))
+  ...)</code></pre>
+
+<p>When writing test suites it is often beneficial to build up values to be tested and run the tests on them incrementally:
+
+<pre><code>(test-group "basic arithmetic"
+  (define one-plus-one (+ 1 1))
+  (test 2 one-plus-one)
+  (define two-plus-two (+ one-plus-one one-plus-one))
+  (test 4 two-plus-two))</code></pre>
+
+<p>The change would also simplify the semantics of R7RS Large by using a single order of macro expansion for all three kinds of bodies (program, library, and procedure bodies).
+
+<h2 id="specification">Specification</h2>
+
+<p>All instances of ??????body?????? in the syntax of Scheme forms may contain any number of definitions or expressions followed by at least one expression.
+
+<blockquote>
+  <p>??????definition or expression?????? <code>...</code> ??????expression??????
+</blockquote>
+
+<p>The final ??????expression?????? becomes the result of evaluating the ??????body??????; it is in tail position if the body as a whole is in tail position.
+
+<p>It is an error for the evaluation of any expression or of the right-hand side of any definition in the sequence of ??????definition or expression??????s to require knowledge of the value of a variable whose definition is to the right of it.
+
+<p>It is an error to invoke the continuation of any variable definition more than once, either directly, or by returning again to the continuation of an expression which appears before a definition and then allowing control flow to continue back to the definition. Implementations are strongly encouraged to detect this situation and signal an error when it occurs.
+
+<h3>R6RS-compatible semantics</h3>
+
+<p>R6RS specifies that program (top-level) bodies are expanded into the equivalent of a <code>letrec*</code>, turning ??????expression??????s before the final variable definition in the program body into bindings of dummy variables which bind the equivalent of <code>(begin </code>??????expression?????? ??????unspecified??????<code>)</code>, where ??????unspecified?????? evaluates without side effects to some unspecified value. This SRFI extends a variant of this process to all bodies.
+
+<p>Namely, ??????expression??????s appearing before a variable definition are combined in order before the right-hand side expression of the definition of the following variable into the equivalent of a <code>begin</code> form as the initializer expression of variable within the hypothetical <code>letrec*</code>. The following two examples are equivalent under this transformation.
+
+<table>
+  <tr>
+    <td><pre><code>expr_1
+(define var_1 (x))
+expr_2
+expr_3
+(define var_2 (y))
+(define var_3 (z))
+expr_4
+expr_5</code></pre>
+    <td>???????
+    <td><pre><code>(letrec*
+    ((var_1
+      (begin
+        expr_1
+        (x)))
+     (var_2
+      (begin
+        expr_2
+        expr_3
+        (y)))
+     (var_3 (z)))
+  expr_4
+  expr_5)</code</pre>
+</table>
+
+<h2 id="implementation">Implementation</h2>
+
+<p>Scheme implementations which already support this SRFI include MIT Scheme, Chicken, and Guile.
+
+<h2 id="acknowledgements">Acknowledgements</h2>
+
+<p>Marc Nieper-Wi????kirchen suggested this change.
+
+<h2 id="copyright">Copyright</h2>
+<p>&copy; 2023 Daphne Preston-Kendal.</p>
+
+<p>
+  Permission is hereby granted, free of charge, to any person
+  obtaining a copy of this software and associated documentation files
+  (the "Software"), to deal in the Software without restriction,
+  including without limitation the rights to use, copy, modify, merge,
+  publish, distribute, sublicense, and/or sell copies of the Software,
+  and to permit persons to whom the Software is furnished to do so,
+  subject to the following conditions:</p>
+
+<p>
+  The above copyright notice and this permission notice (including the
+  next paragraph) shall be included in all copies or substantial
+  portions of the Software.</p>
+<p>
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+  NONINFRINGEMENT.  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+  BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+  ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+  CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.</p>
+
+  <hr>
+  <address>Editor: <a href="mailto:srfi-editors+at+srfi+dot+schemers+dot+org">Arthur A. Gleckler</a></address></body></html>
