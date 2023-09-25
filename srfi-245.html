@@ -64,7 +64,7 @@
 
 <p>The final <em>expression</em> becomes the result of evaluating the <em>body</em>; it is in tail position if the body as a whole is in tail position.
 
-<p>It is an error for the evaluation of any expression or of the right-hand side of any definition in the sequence of <em>definition or expression</em>s to require knowledge of the value of a variable whose definition is to the right of it.
+<p>It is an error for the evaluation of any expression or of the right-hand side of any definition in the sequence of <em>definition or expression</em>s to use or assign the value of a variable whose definition is to the right of it.
 
 <p>It is an error to invoke the continuation of any variable definition more than once, either directly, or by returning again to the continuation of an expression which appears before a definition and then allowing control flow to continue back to the definition. Implementations are strongly encouraged to detect this situation and signal an error when it occurs.
 
