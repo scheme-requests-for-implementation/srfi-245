@@ -17,6 +17,7 @@
       <li>Received: 2023-09-23</li>
       <li>60-day deadline: 2023-11-22</li>
       <li>Draft #1 published: 2023-09-23</li>
+      <li>Draft #2 published: 2023-11-29</li>
     </ul>
 
 <h2 id="abstract">Abstract</h2>
@@ -31,7 +32,7 @@
 
 <p>It often makes sense to run type and other basic error checks on input forms before any other code runs (including the right-hand sides of definitions):
 
-<pre><code>(define (double-square x) 
+<pre><code>(define (double-square x)
   (unless (number? x)
     (error "foo: not a number" x))
   (define y (square x))
